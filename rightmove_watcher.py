@@ -123,7 +123,8 @@ class RightMoveWatcher:
             else:
                 new_properties = self._get_search_results()
                 for idx in range(self.check_depth):
-                    if (prop_id := new_properties[idx]) not in self.property_ids:
+                    prop_id = new_properties[idx]
+                    if prop_id not in self.property_ids:
                         print(f'*** New Property: {prop_id} ***')
                         self.send_text(f'New Property: {prop_id}')
                         self._new = True
