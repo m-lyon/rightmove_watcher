@@ -50,12 +50,11 @@ def get_property_list(html_doc: str) -> List[str]:
 class PropertyElement:
     '''Property Container class'''
     def __init__(self, elem):
-        self.elem = elem
-        self._parse_id()
-        self._parse_price()
-        self._parse_href()
-        self._parse_location()
-        self._parse_title()
+        self._parse_id(elem)
+        self._parse_price(elem)
+        self._parse_href(elem)
+        self._parse_location(elem)
+        self._parse_title(elem)
 
     def __eq__(self, other):
         return self.id == other.id
@@ -63,25 +62,25 @@ class PropertyElement:
     def __str__(self):
         return f'{self.title}, {self.price_str}\n{self.location}\n{self.href}'
 
-    def _parse_id(self):
+    def _parse_id(self, elem):
         # pylint: disable=invalid-name
-        self.id = self.elem.get('id').replace('property-', '')
+        self.id = elem.get('id').replace('property-', '')
 
-    def _parse_price(self):
-        self.price_str = self.elem.find('span', class_='propertyCard-priceValue').text
+    def _parse_price(self, elem):
+        self.price_str = elem.find('span', class_='propertyCard-priceValue').text
         self.price = self.price_str.replace('pcm', '').replace('£', '').strip()
 
-    def _parse_href(self):
-        rel_link = self.elem.find(
+    def _parse_href(self, elem):
+        rel_link = elem.find(
             'a', class_='propertyCard-priceLink propertyCard-rentalPrice'
         )['href']
         self.href = 'https://rightmove.co.uk' + rel_link
 
-    def _parse_location(self):
-        self.location = self.elem.find('address', class_='propertyCard-address').text.strip()
+    def _parse_location(self, elem):
+        self.location = elem.find('address', class_='propertyCard-address').text.strip()
 
-    def _parse_title(self):
-        self.title = self.elem.find('h2', class_='propertyCard-title').text.strip().title()
+    def _parse_title(self, elem):
+        self.title = elem.find('h2', class_='propertyCard-title').text.strip().title()
 
 
 class RightMoveWatcher:
